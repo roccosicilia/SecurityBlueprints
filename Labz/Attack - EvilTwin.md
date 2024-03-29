@@ -1,18 +1,14 @@
 # Evil Twin Attack [draft]
 
-## Predisposizioni
+## Steps
 
- - Scaricare airgeddon
+## Lab Setup
+Lab Device list:
+- WiFi Pineapple IV
+- Target AP
+- Target station (Samsung Galaxy A5)
+- Workstation with a browser
+- Remote host (in my scenario an EC2 istance)
 
- ``` bash
- git clone https://github.com/v1s1t0r1sh3r3/airgeddon.git
- ```
-
- - attivare la monitor mode sul WiFi adapter
-
- ``` bash
-sudo airmon-ng check kill
-sudo airmon-ng start wlan0
- ```
-
-## Scenario #1: sniffing
+## Recon
+This attack technique requires physical reconnaissance to verify the number of wireless networks and clients related to a specific target.
