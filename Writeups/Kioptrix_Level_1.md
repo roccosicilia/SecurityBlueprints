@@ -107,4 +107,4 @@ Finished
 ```
 - MRTG web app discovered
 
-![MRTG](https:// "MRTG")
+![MRTG](https://github.com/roccosicilia/SecurityBlueprints/blob/main/Writeups/static/kioptrix-mrtg-homepage.png?raw=true "MRTG")
