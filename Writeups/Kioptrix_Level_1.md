@@ -72,8 +72,9 @@ Host script results:
 
 Default page available on TCP port 80.
 
-## Directory Discovery via gobuster
+## Directory Discovery
 
+- Gobuster dir discovery
 ```
 gobuster dir -u http://192.168.1.104 -w /usr/share/wordlists/dirb/common.txt 
 ===============================================================
@@ -105,6 +106,6 @@ Progress: 4614 / 4615 (99.98%)
 Finished
 ===============================================================
 ```
-- MRTG web app discovered
 
+- MRTG web app discovered
 ![MRTG](https://github.com/roccosicilia/SecurityBlueprints/blob/main/Writeups/static/kioptrix-mrtg-homepage.png?raw=true "MRTG")
