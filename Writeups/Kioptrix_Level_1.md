@@ -4,7 +4,7 @@
 
 - Port scan
 
-``` bash
+```
 # tcp scan
 nmap -sT 192.168.1.104
 Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-08-20 16:13 CEST
