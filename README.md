@@ -1,4 +1,4 @@
-# OffSec_Study
+# Security Blueprint
 
 Repository of notes and technical documentation on penetration testing labs.
 
