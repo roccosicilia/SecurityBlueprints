@@ -69,6 +69,7 @@ Host script results:
 ```
 
 - enum4linux: no rilevant information
+ - SMB version?
 
 ```
 nmap -sC --script vuln 192.168.1.104
@@ -173,6 +174,8 @@ Apache mod_ssl OpenSSL < 0.9.6d / < 0.9.7-beta2 - 'openssl-too-open.c' SSL2 KEY_
  - Obtain a shell: user apache
 
 ## Explotation 2: smb-vuln-cve2009-3103
+
+smbstatus to check version
 
 ```
 ./smbexp -b 0 -v 192.168.1.104        
